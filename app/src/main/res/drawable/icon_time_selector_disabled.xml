@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/icon_time_selector_size"/>
+    <item android:gravity="center">
+        <shape android:shape="oval">
+            <size
+                android:width="@dimen/selector_disabled_size"
+                android:height="@dimen/selector_disabled_size"/>
+            <solid android:color="@color/disabled"/>
+        </shape>
+    </item>
+</layer-list>

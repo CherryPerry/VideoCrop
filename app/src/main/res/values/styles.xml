@@ -1,0 +1,113 @@
+<resources>
+
+    <style name="AppTheme"
+        parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="android:windowBackground">@color/background</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+
+        <item name="textAppearanceHeadline1">@style/AppTheme.TextAppearance.MaterialComponents.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/AppTheme.TextAppearance.MaterialComponents.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/AppTheme.TextAppearance.MaterialComponents.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/AppTheme.TextAppearance.MaterialComponents.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/AppTheme.TextAppearance.MaterialComponents.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/AppTheme.TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/AppTheme.TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/AppTheme.TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/AppTheme.TextAppearance.MaterialComponents.Body1</item>
+        <item name="textAppearanceBody2">@style/AppTheme.TextAppearance.MaterialComponents.Body2</item>
+        <item name="textAppearanceCaption">@style/AppTheme.TextAppearance.MaterialComponents.Caption</item>
+        <item name="textAppearanceButton">@style/AppTheme.TextAppearance.MaterialComponents.Button</item>
+        <item name="textAppearanceOverline">@style/AppTheme.TextAppearance.MaterialComponents.Overline</item>
+
+        <item name="toolbarNavigationButtonStyle">@style/AppTheme.Toolbar.Button.Navigation</item>
+
+    </style>
+
+    <!-- Theme -->
+
+    <style name="AppTheme.White" parent="AppTheme">
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <!-- Typography -->
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline1"
+        parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/rubik_light</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline2"
+        parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/rubik_light</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline3"
+        parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline4"
+        parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline5"
+        parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Headline6"
+        parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Subtitle1"
+        parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Subtitle2"
+        parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="fontFamily">@font/rubik_medium</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Body1"
+        parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Body2"
+        parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Caption"
+        parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Button"
+        parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/rubik_medium</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.MaterialComponents.Overline"
+        parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/rubik_medium</item>
+    </style>
+
+    <!-- Toolbar -->
+
+    <style name="AppTheme.Toolbar.Button.Navigation"
+        parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:tint">@color/colorAccent</item>
+    </style>
+
+</resources>

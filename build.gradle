@@ -1,0 +1,56 @@
+buildscript {
+    ext {
+        kotlin_version = '1.2.71'
+        detekt_version = '1.0.0.RC9.2'
+    }
+
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta02'
+        classpath 'com.android.tools.build.jetifier:jetifier-core:1.0.0-beta02'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+detekt {
+    toolVersion = detekt_version
+    input = files('app/src/main/java')
+    filters = '.*/resources/.*,.*/build/.*'
+    config = files('detekt.yml')
+}
+
+apply plugin: 'com.github.ben-manes.versions'
+
+dependencyUpdates.resolutionStrategy {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
+    }
+}

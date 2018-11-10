@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">instavideo</string>
+
+    <!-- Picker -->
+    <string name="picker_title">Selection</string>
+    <string name="picker_hint">Select video for conversion. It will be resized to 512x512 AVC AAC video. You can crop and resize it anyway you want. Video duration is limited to 20 seconds.</string>
+    <string name="picker_select_video">Select video</string>
+
+    <!-- Editor -->
+    <string name="editor_title">Cropping</string>
+    <string name="editor_video_error">Failed to play video</string>
+    <string name="editor_apply">Apply</string>
+
+    <!-- Conversion -->
+    <string name="conversion_title">Conversion</string>
+    <string name="conversion_loading">Converting…</string>
+    <string name="conversion_error">Error was acquired while converting video.</string>
+    <string name="conversion_close">Close</string>
+    <string name="conversion_open_result">Open result</string>
+    <string name="conversion_convert_another">Convert another</string>
+
+</resources>

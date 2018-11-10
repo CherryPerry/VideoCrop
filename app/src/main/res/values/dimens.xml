@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="editor_panel_elevation">4dp</dimen>
+
+    <dimen name="selector_ripple_size">48dp</dimen>
+    <dimen name="selector_disabled_size">8dp</dimen>
+    <dimen name="selector_enabled_size">12dp</dimen>
+
+</resources>
