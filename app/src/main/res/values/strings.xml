@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">instavideo</string>
+    <string name="app_name">VideoCrop</string>
 
     <!-- Picker -->
     <string name="picker_title">Selection</string>
