@@ -1,9 +1,15 @@
 package ru.cherryperry.instavideo.data.media.conversion
 
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class ReportingFrameCallbackTest {
+
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
 
     @Test
     fun reportingFrameCallbackOneTrack() {
@@ -29,10 +35,11 @@ class ReportingFrameCallbackTest {
         Assert.assertEquals(listOf(0.005f, 0.05f, 0.5f, 0.505f, 0.55f, 1f), videoConverterCallback.results)
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun reportingFrameCallbackInvalidSwitchTrack() {
         val videoConverterCallback = DefaultVideoConverterCallback()
         val callback = VideoConverterImpl.ReportingFrameCallback(videoConverterCallback, 1, 1)
+        expectedException.expect(IllegalStateException::class.java)
         callback.switchTrack()
     }
 

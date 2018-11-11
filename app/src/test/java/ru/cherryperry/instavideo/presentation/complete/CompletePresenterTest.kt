@@ -32,7 +32,7 @@ class CompletePresenterTest {
         val router = mock<Router>()
         val presenter = CompletePresenter(URI_TARGET, router)
         presenter.onConvertAnotherClick()
-        verify(router).navigateTo(PickerScreen)
+        verify(router).replaceScreen(PickerScreen)
     }
 
     @Test

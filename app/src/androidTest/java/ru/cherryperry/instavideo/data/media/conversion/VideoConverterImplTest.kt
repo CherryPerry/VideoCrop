@@ -6,7 +6,9 @@ import android.media.MediaMetadataRetriever
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import ru.cherryperry.instavideo.AssetsInfo
 import ru.cherryperry.instavideo.testResources
@@ -20,6 +22,10 @@ class VideoConverterImplTest {
         private const val DURATION_DELTA = 300
     }
 
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
+
     private val outputFile = File(ApplicationProvider.getApplicationContext<Context>().filesDir, "test.mp4").absolutePath
 
     @Test
@@ -27,44 +33,51 @@ class VideoConverterImplTest {
         Assert.assertEquals(1382400, VideoConverterImpl.yuvAllocationSize(1280, 720))
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun yuvAllocationSizeNegativeWidth() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl.yuvAllocationSize(-1, 20)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun yuvAllocationSizeNegativeHeight() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl.yuvAllocationSize(10, -1)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun yuvAllocationSizeZeroWidth() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl.yuvAllocationSize(0, 20)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun yuvAllocationSizeZeroHeight() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl.yuvAllocationSize(10, 0)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidStart() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl(ApplicationProvider.getApplicationContext()).use {
             it.process(EmptyMediaExtractorSource(), -1, 0, RectF(), outputFile,
                 DefaultVideoConverterCallback())
         }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidEnd() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl(ApplicationProvider.getApplicationContext()).use {
             it.process(EmptyMediaExtractorSource(), 0, -1, RectF(), outputFile,
                 DefaultVideoConverterCallback())
         }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidRange() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoConverterImpl(ApplicationProvider.getApplicationContext()).use {
             it.process(EmptyMediaExtractorSource(), 1, 0, RectF(), outputFile,
                 DefaultVideoConverterCallback())

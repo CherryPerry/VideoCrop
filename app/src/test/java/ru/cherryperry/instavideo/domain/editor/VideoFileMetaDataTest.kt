@@ -1,9 +1,15 @@
 package ru.cherryperry.instavideo.domain.editor
 
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class VideoFileMetaDataTest {
+
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
 
     @Test
     fun valid() {
@@ -13,18 +19,21 @@ class VideoFileMetaDataTest {
         Assert.assertEquals(3, data.durationMs)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidWidth() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoFileMetaData(0, 2, 3)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidHeight() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoFileMetaData(1, 0, 3)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun invalidDuration() {
+        expectedException.expect(IllegalArgumentException::class.java)
         VideoFileMetaData(1, 2, 0)
     }
 }

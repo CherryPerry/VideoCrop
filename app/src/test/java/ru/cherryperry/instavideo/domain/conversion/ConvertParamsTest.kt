@@ -4,11 +4,17 @@ import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ConvertParamsTest {
+
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
 
     @Test
     fun valid() {
@@ -25,8 +31,8 @@ class ConvertParamsTest {
         Assert.assertEquals(params.sourceRect, rectF)
     }
 
-    @Test(expected = IllegalArgumentException::class)
     fun illegalStartStop() {
+        expectedException.expect(IllegalArgumentException::class.java)
         ConvertParams(Uri.EMPTY, Uri.EMPTY, 1, 0, RectF())
     }
 }

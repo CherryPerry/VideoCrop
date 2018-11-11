@@ -4,7 +4,9 @@ import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Single
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import ru.cherryperry.instavideo.domain.editor.VideoFileMetaData
@@ -20,6 +22,10 @@ class EditorPresenterTest {
         private val URI_TARGET = Uri.parse("test://target")
         private val FILE_DATA = VideoFileMetaData(200, 100, 4)
     }
+
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
 
     @Test
     fun initialization() {
@@ -60,34 +66,46 @@ class EditorPresenterTest {
         Mockito.verify(view).showVideo(URI_SOURCE, 1000, 3000)
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun onSelectionChangedInvalidState() {
-        createDefaultPresenter().onSelectionChanged(0f, 1f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalStateException::class.java)
+        presenter.onSelectionChanged(0f, 1f)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun onSelectionChangedInvalidArgsStartMoreThanEnd() {
-        createDefaultPresenter().onSelectionChanged(1f, 0f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalArgumentException::class.java)
+        presenter.onSelectionChanged(1f, 0f)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun onSelectionChangedInvalidArgsStartLessThan0() {
-        createDefaultPresenter().onSelectionChanged(-1f, 1f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalArgumentException::class.java)
+        presenter.onSelectionChanged(-1f, 1f)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun onSelectionChangedInvalidArgsStartMoreThan1() {
-        createDefaultPresenter().onSelectionChanged(2f, 1f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalArgumentException::class.java)
+        presenter.onSelectionChanged(2f, 1f)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun onSelectionChangedInvalidArgsEndLessThan0() {
-        createDefaultPresenter().onSelectionChanged(0f, -1f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalArgumentException::class.java)
+        presenter.onSelectionChanged(0f, -1f)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun onSelectionChangedInvalidArgsEndMoreThan1() {
-        createDefaultPresenter().onSelectionChanged(0f, 2f)
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalArgumentException::class.java)
+        presenter.onSelectionChanged(0f, 2f)
     }
 
     @Test
@@ -103,9 +121,11 @@ class EditorPresenterTest {
         Mockito.verify(router).replaceScreen(ConversionScreen(URI_SOURCE, URI_TARGET, 1000, 3000, RectF()))
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun onOutputSelectedInvalidState() {
-        createDefaultPresenter().onOutputSelected(URI_TARGET, RectF())
+        val presenter = createDefaultPresenter()
+        expectedException.expect(IllegalStateException::class.java)
+        presenter.onOutputSelected(URI_TARGET, RectF())
     }
 
     private fun createDefaultPresenter(): EditorPresenter {
