@@ -2,10 +2,12 @@ package ru.cherryperry.instavideo.presentation.conversion
 
 import android.graphics.RectF
 import android.net.Uri
+import android.view.View
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.Component
@@ -13,15 +15,17 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
-import org.hamcrest.Matchers
+import org.hamcrest.Description
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import ru.cherryperry.instavideo.FragmentScenario
 import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
-import ru.cherryperry.instavideo.matcher
+import ru.cherryperry.instavideo.onFragmentException
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -34,6 +38,10 @@ class ConversionFragmentTest {
         private const val END = 20L
         private val RECT_F = RectF(0.1f, 0.2f, 0.3f, 0.4f)
     }
+
+    @Rule
+    @JvmField
+    val expectedException = ExpectedException.none()
 
     @Inject
     lateinit var presenter: ConversionPresenter
@@ -52,48 +60,39 @@ class ConversionFragmentTest {
     }
 
     @Test
-    fun errorState() {
+    fun showProgress() {
         scenario.onFragment {
-            it.showState(ConversionScreenErrorState)
+            it.showProgress(0.5f)
         }
-        Espresso.onView(ViewMatchers.withId(R.id.loadingGroup))
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-        Espresso.onView(ViewMatchers.withId(R.id.errorGroup))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.completeGroup))
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-    }
-
-    @Test
-    fun loadingState() {
-        scenario.onFragment {
-            it.showState(ConversionScreenProgressState(0.5f))
-        }
-        Espresso.onView(ViewMatchers.withId(R.id.loadingGroup))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(matcher {
-                (it as ProgressBar).let { progressBar ->
-                    progressBar.progress / progressBar.max.toFloat() == 0.5f
-                }
-            }))
-        Espresso.onView(ViewMatchers.withId(R.id.errorGroup))
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-        Espresso.onView(ViewMatchers.withId(R.id.completeGroup))
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
+            .check(ViewAssertions.matches(ProgressBarMatcher(50)))
     }
 
     @Test
-    fun completedState() {
-        scenario.onFragment {
-            it.showState(ConversionScreenCompleteState)
+    fun showProgressInvalidProgressLowerThanZero() {
+        expectedException.expect(IllegalArgumentException::class.java)
+        scenario.onFragmentException {
+            it.showProgress(-0.1f)
         }
-        Espresso.onView(ViewMatchers.withId(R.id.loadingGroup))
-            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-        Espresso.onView(ViewMatchers.withId(R.id.errorGroup))
-            .check(ViewAssertions.matches(Matchers.not((ViewMatchers.isDisplayed()))))
-        Espresso.onView(ViewMatchers.withId(R.id.completeGroup))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    @Test
+    fun showProgressInvalidProgressHigherThanOne() {
+        expectedException.expect(IllegalArgumentException::class.java)
+        scenario.onFragmentException {
+            it.showProgress(1.1f)
+        }
+    }
+
+    class ProgressBarMatcher(
+        private val progressValue: Int
+    ) : BoundedMatcher<View, ProgressBar>(ProgressBar::class.java) {
+
+        override fun matchesSafely(item: ProgressBar): Boolean = item.progress == progressValue
+
+        override fun describeTo(description: Description) {
+            description.appendText("with progress value:").appendValue(progressValue)
+        }
     }
 
     @Module

@@ -6,8 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
 import dagger.android.AndroidInjector
-import org.hamcrest.BaseMatcher
-import org.hamcrest.Description
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Executes block between [Intents.init] and [Intents.release] calls.
@@ -46,13 +45,14 @@ fun testResources(): Resources = ApplicationProvider.getApplicationContext<Conte
     .packageManager
     .getResourcesForApplication("ru.cherryperry.instavideo.test")
 
-fun <T> matcher(block: (T) -> Boolean) = object : BaseMatcher<T>() {
-
-    override fun describeTo(description: Description?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+fun <T : Fragment> FragmentScenario<T>.onFragmentException(block: (T) -> Unit) {
+    val ref = AtomicReference<Throwable>()
+    this.onFragment {
+        try {
+            block(it)
+        } catch (throwable: Throwable) {
+            ref.set(throwable)
+        }
     }
-
-    override fun matches(item: Any?): Boolean {
-        return block(item as T)
-    }
+    ref.get()?.let { throw it }
 }

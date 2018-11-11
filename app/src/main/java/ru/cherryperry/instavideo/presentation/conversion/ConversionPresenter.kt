@@ -7,9 +7,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.cherryperry.instavideo.domain.conversion.ConvertParams
 import ru.cherryperry.instavideo.domain.conversion.ConvertUseCase
 import ru.cherryperry.instavideo.presentation.base.BasePresenter
-import ru.cherryperry.instavideo.presentation.navigation.CloseScreen
-import ru.cherryperry.instavideo.presentation.navigation.OpenVideoScreen
-import ru.cherryperry.instavideo.presentation.navigation.PickerScreen
+import ru.cherryperry.instavideo.presentation.navigation.CompleteScreen
+import ru.cherryperry.instavideo.presentation.navigation.ErrorScreen
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -29,26 +28,12 @@ open class ConversionPresenter @Inject constructor(
         convertUseCase.run(ConvertParams(sourceUri, targetUri, startUs, endUs, sourceRect))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                viewState.showState(ConversionScreenProgressState(it))
+                viewState.showProgress(it)
             }, {
-                viewState.showState(ConversionScreenErrorState)
-                // TODO Remove?
-                it.printStackTrace()
+                router.replaceScreen(ErrorScreen)
             }, {
-                viewState.showState(ConversionScreenCompleteState)
+                router.replaceScreen(CompleteScreen(targetUri))
             })
             .untilDestroy()
-    }
-
-    fun onOpenResultClick() {
-        router.navigateTo(OpenVideoScreen(targetUri))
-    }
-
-    fun onConvertAnotherClick() {
-        router.replaceScreen(PickerScreen)
-    }
-
-    fun onCloseClick() {
-        router.navigateTo(CloseScreen)
     }
 }

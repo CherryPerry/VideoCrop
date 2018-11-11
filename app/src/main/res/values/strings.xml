@@ -14,9 +14,15 @@
     <!-- Conversion -->
     <string name="conversion_title">Conversion</string>
     <string name="conversion_loading">Converting…</string>
-    <string name="conversion_error">Error was acquired while converting video.</string>
-    <string name="conversion_close">Close</string>
-    <string name="conversion_open_result">Open result</string>
-    <string name="conversion_convert_another">Convert another</string>
+
+    <!-- Complete -->
+    <string name="complete_title">Complete</string>
+    <string name="complete_close">Close</string>
+    <string name="complete_open_result">Open result</string>
+    <string name="complete_convert_another">Convert another</string>
+
+    <!-- Error -->
+    <string name="error_title">Error</string>
+    <string name="error_text">Error was acquired while converting video.</string>
 
 </resources>

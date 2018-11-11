@@ -3,11 +3,12 @@ package ru.cherryperry.instavideo.presentation.conversion
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.ProgressBar
+import androidx.annotation.FloatRange
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.cherryperry.instavideo.R
+import ru.cherryperry.instavideo.core.illegalArgument
 import ru.cherryperry.instavideo.presentation.base.BaseFragment
 import ru.cherryperry.instavideo.presentation.util.ViewDelegate
 import javax.inject.Inject
@@ -68,13 +69,7 @@ class ConversionFragment : BaseFragment(), ConversionView {
     @InjectPresenter
     lateinit var presenter: ConversionPresenter
 
-    private val loadingGroup by ViewDelegate<View>(R.id.loadingGroup, viewDelegateReset)
     private val progressView by ViewDelegate<ProgressBar>(R.id.progressBar, viewDelegateReset)
-    private val errorGroup by ViewDelegate<View>(R.id.errorGroup, viewDelegateReset)
-    private val completeGroup by ViewDelegate<View>(R.id.completeGroup, viewDelegateReset)
-    private val openResultButton by ViewDelegate<View>(R.id.openResult, viewDelegateReset)
-    private val convertAnotherButton by ViewDelegate<View>(R.id.convertAnother, viewDelegateReset)
-    private val closeButton by ViewDelegate<View>(R.id.close, viewDelegateReset)
 
     override val layoutId: Int = R.layout.conversion
     override val toolbarTitle: CharSequence?
@@ -83,31 +78,8 @@ class ConversionFragment : BaseFragment(), ConversionView {
     @ProvidePresenter
     fun providePresenter() = presenterProvider.get()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        openResultButton.setOnClickListener { presenter.onOpenResultClick() }
-        convertAnotherButton.setOnClickListener { presenter.onConvertAnotherClick() }
-        closeButton.setOnClickListener { presenter.onCloseClick() }
-    }
-
-    override fun showState(conversionScreenState: ConversionScreenState) {
-        when (conversionScreenState) {
-            is ConversionScreenProgressState -> {
-                loadingGroup.visibility = View.VISIBLE
-                errorGroup.visibility = View.GONE
-                completeGroup.visibility = View.GONE
-                progressView.progress = (progressView.max * conversionScreenState.progress).roundToInt()
-            }
-            is ConversionScreenErrorState -> {
-                errorGroup.visibility = View.VISIBLE
-                loadingGroup.visibility = View.GONE
-                completeGroup.visibility = View.GONE
-            }
-            is ConversionScreenCompleteState -> {
-                completeGroup.visibility = View.VISIBLE
-                loadingGroup.visibility = View.GONE
-                errorGroup.visibility = View.GONE
-            }
-        }
+    override fun showProgress(@FloatRange(from = 0.0, to = 1.0) progress: Float) {
+        (progress < 0 || progress > 1) illegalArgument "Progress should be in [0,1] range"
+        progressView.progress = (progressView.max * progress).roundToInt()
     }
 }

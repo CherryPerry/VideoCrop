@@ -5,8 +5,12 @@ import dagger.Module
 import dagger.android.AndroidInjector
 import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
+import ru.cherryperry.instavideo.presentation.conversion.CompleteFragment
+import ru.cherryperry.instavideo.presentation.conversion.CompleteFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.conversion.ConversionFragment
 import ru.cherryperry.instavideo.presentation.conversion.ConversionFragmentSubcomponent
+import ru.cherryperry.instavideo.presentation.conversion.ErrorFragment
+import ru.cherryperry.instavideo.presentation.conversion.ErrorFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.editor.EditorFragment
 import ru.cherryperry.instavideo.presentation.editor.EditorFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.picker.PickerFragment
@@ -15,7 +19,9 @@ import ru.cherryperry.instavideo.presentation.picker.PickerFragmentSubcomponent
 @Module(subcomponents = [
     PickerFragmentSubcomponent::class,
     EditorFragmentSubcomponent::class,
-    ConversionFragmentSubcomponent::class
+    ConversionFragmentSubcomponent::class,
+    ErrorFragmentSubcomponent::class,
+    CompleteFragmentSubcomponent::class
 ])
 abstract class FragmentBuilder {
 
@@ -33,4 +39,14 @@ abstract class FragmentBuilder {
     @IntoMap
     @ClassKey(ConversionFragment::class)
     abstract fun bindConversionFragment(builder: ConversionFragmentSubcomponent.Builder): AndroidInjector.Factory<*>
+
+    @Binds
+    @IntoMap
+    @ClassKey(ErrorFragment::class)
+    abstract fun bindErrorFragment(builder: ErrorFragmentSubcomponent.Builder): AndroidInjector.Factory<*>
+
+    @Binds
+    @IntoMap
+    @ClassKey(CompleteFragment::class)
+    abstract fun bindCompleteFragment(builder: CompleteFragmentSubcomponent.Builder): AndroidInjector.Factory<*>
 }

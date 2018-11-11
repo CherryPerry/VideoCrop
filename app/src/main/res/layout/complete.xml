@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:ems="13"
+        android:text="@string/complete_open_result"
+        app:layout_constraintBottom_toTopOf="@+id/convertAnother"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/convertAnother"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="@string/complete_convert_another"
+        app:layout_constraintBottom_toTopOf="@+id/close"
+        app:layout_constraintEnd_toEndOf="@+id/openResult"
+        app:layout_constraintStart_toStartOf="@+id/openResult"
+        app:layout_constraintTop_toBottomOf="@+id/openResult"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/close"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/complete_close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/openResult"
+        app:layout_constraintStart_toStartOf="@+id/openResult"
+        app:layout_constraintTop_toBottomOf="@+id/convertAnother"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
