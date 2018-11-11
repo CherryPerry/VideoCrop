@@ -66,7 +66,7 @@ class VideoConverterImpl @Inject constructor(
         (endUs < startUs) illegalArgument "End can't be before start"
         source.setDataSource(mediaExtractor)
         val tracks = selectTracks()
-        // TODO Audio
+        // TODO Fix audio
         transcodeAndMux(tracks.first, null, startUs, endUs, sourceRect, outputFile, callback)
     }
 
@@ -191,7 +191,7 @@ class VideoConverterImpl @Inject constructor(
             val decoderInputBuffer = decoder.getInputBuffer(decoderInputBufferIndex)!!
             decoderInputBuffer.position(0)
             decoderInputBuffer.put(byteBuffer)
-            decoder.queueInputBuffer(decoderInputBufferIndex, 0, read, mediaExtractor.sampleTime, 0)
+            decoder.queueInputBuffer(decoderInputBufferIndex, 0, read, mediaExtractor.sampleTime, mediaExtractor.sampleFlags)
             var decoderOutputIndex = decoder.dequeueOutputBufferInfinite(bufferInfo)
             while (decoderOutputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED
                 || decoderOutputIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
@@ -291,7 +291,7 @@ class VideoConverterImpl @Inject constructor(
             val decoderInputBuffer = decoder.getInputBuffer(decoderInputBufferIndex)!!
             decoderInputBuffer.position(0)
             decoderInputBuffer.put(byteBuffer)
-            decoder.queueInputBuffer(decoderInputBufferIndex, 0, read, mediaExtractor.sampleTime, 0)
+            decoder.queueInputBuffer(decoderInputBufferIndex, 0, read, mediaExtractor.sampleTime, mediaExtractor.sampleFlags)
             var decoderOutputIndex = decoder.dequeueOutputBufferInfinite(bufferInfo)
             if (decoderOutputIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED
                 || decoderOutputIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
