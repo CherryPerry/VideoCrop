@@ -9,7 +9,7 @@ class ReportingFrameCallbackTest {
 
     @Rule
     @JvmField
-    val expectedException = ExpectedException.none()
+    val expectedException: ExpectedException = ExpectedException.none()
 
     @Test
     fun reportingFrameCallbackOneTrack() {

@@ -3,12 +3,15 @@ package ru.cherryperry.instavideo.presentation.editor
 import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.Ordering
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.domain.editor.VideoFileMetaData
 import ru.cherryperry.instavideo.domain.editor.VideoFileMetaDataUseCase
 import ru.cherryperry.instavideo.presentation.navigation.ConversionScreen
@@ -25,112 +28,89 @@ class EditorPresenterTest {
 
     @Rule
     @JvmField
-    val expectedException = ExpectedException.none()
+    val expectedException: ExpectedException = ExpectedException.none()
+
+    private val useCase = mockk<VideoFileMetaDataUseCase> {
+        every { run(URI_SOURCE) } returns Single.just(FILE_DATA)
+    }
+    private val router = mockk<Router>(relaxUnitFun = true)
+    private val view = mockk<EditorView>(relaxUnitFun = true)
+    private val presenter = EditorPresenter(URI_SOURCE, useCase, router)
 
     @Test
     fun initialization() {
         // presenter should request video duration on first view attach
-        val useCase = Mockito.mock(VideoFileMetaDataUseCase::class.java)
-        Mockito.`when`(useCase.run(URI_SOURCE)).thenReturn(Single.just(FILE_DATA))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(EditorView::class.java)
-        val presenter = EditorPresenter(URI_SOURCE, useCase, router)
         presenter.attachView(view)
-        Mockito.verify(useCase).run(URI_SOURCE)
-        Mockito.verify(view).showState(EditorView.State.LOADING)
-        Mockito.verify(view).showState(EditorView.State.NORMAL)
-        Mockito.verify(view).setVideoRatio(FILE_DATA.width, FILE_DATA.height)
+        verify(ordering = Ordering.ORDERED) {
+            useCase.run(URI_SOURCE)
+            view.showState(EditorView.State.LOADING)
+            view.showState(EditorView.State.NORMAL)
+            view.setVideoRatio(FILE_DATA.width, FILE_DATA.height)
+        }
     }
 
     @Test
     fun initializationError() {
         // presenter should request video duration on first view attach
-        val useCase = Mockito.mock(VideoFileMetaDataUseCase::class.java)
-        Mockito.`when`(useCase.run(URI_SOURCE)).thenReturn(Single.error(IllegalStateException()))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(EditorView::class.java)
-        val presenter = EditorPresenter(URI_SOURCE, useCase, router)
+        every { useCase.run(URI_SOURCE) } returns Single.error(RuntimeException())
         presenter.attachView(view)
-        Mockito.verify(view).showState(EditorView.State.ERROR)
+        verify { view.showState(EditorView.State.ERROR) }
     }
 
     @Test
     fun onSelectionChanged() {
-        val useCase = Mockito.mock(VideoFileMetaDataUseCase::class.java)
-        Mockito.`when`(useCase.run(URI_SOURCE)).thenReturn(Single.just(FILE_DATA))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(EditorView::class.java)
-        val presenter = EditorPresenter(URI_SOURCE, useCase, router)
         presenter.attachView(view)
         presenter.onSelectionChanged(0.25f, 0.75f)
-        Mockito.verify(view).showVideo(URI_SOURCE, 1000, 3000)
+        verify { view.showVideo(URI_SOURCE, 1000, 3000) }
     }
 
     @Test
     fun onSelectionChangedInvalidState() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalStateException::class.java)
         presenter.onSelectionChanged(0f, 1f)
     }
 
     @Test
     fun onSelectionChangedInvalidArgsStartMoreThanEnd() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalArgumentException::class.java)
         presenter.onSelectionChanged(1f, 0f)
     }
 
     @Test
     fun onSelectionChangedInvalidArgsStartLessThan0() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalArgumentException::class.java)
         presenter.onSelectionChanged(-1f, 1f)
     }
 
     @Test
     fun onSelectionChangedInvalidArgsStartMoreThan1() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalArgumentException::class.java)
         presenter.onSelectionChanged(2f, 1f)
     }
 
     @Test
     fun onSelectionChangedInvalidArgsEndLessThan0() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalArgumentException::class.java)
         presenter.onSelectionChanged(0f, -1f)
     }
 
     @Test
     fun onSelectionChangedInvalidArgsEndMoreThan1() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalArgumentException::class.java)
         presenter.onSelectionChanged(0f, 2f)
     }
 
     @Test
     fun onOutputSelected() {
-        val useCase = Mockito.mock(VideoFileMetaDataUseCase::class.java)
-        Mockito.`when`(useCase.run(URI_SOURCE)).thenReturn(Single.just(FILE_DATA))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(EditorView::class.java)
-        val presenter = EditorPresenter(URI_SOURCE, useCase, router)
         presenter.attachView(view)
         presenter.onSelectionChanged(0.25f, 0.75f)
         presenter.onOutputSelected(URI_TARGET, RectF())
-        Mockito.verify(router).replaceScreen(ConversionScreen(URI_SOURCE, URI_TARGET, 1000, 3000, RectF()))
+        verify { router.replaceScreen(ConversionScreen(URI_SOURCE, URI_TARGET, 1000, 3000, RectF())) }
     }
 
     @Test
     fun onOutputSelectedInvalidState() {
-        val presenter = createDefaultPresenter()
         expectedException.expect(IllegalStateException::class.java)
         presenter.onOutputSelected(URI_TARGET, RectF())
-    }
-
-    private fun createDefaultPresenter(): EditorPresenter {
-        val useCase = Mockito.mock(VideoFileMetaDataUseCase::class.java)
-        val router = Mockito.mock(Router::class.java)
-        return EditorPresenter(URI_SOURCE, useCase, router)
     }
 }

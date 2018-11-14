@@ -41,7 +41,7 @@ class ConversionFragmentTest {
 
     @Rule
     @JvmField
-    val expectedException = ExpectedException.none()
+    val expectedException: ExpectedException = ExpectedException.none()
 
     @Inject
     lateinit var presenter: ConversionPresenter

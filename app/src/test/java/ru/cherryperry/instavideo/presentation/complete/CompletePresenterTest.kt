@@ -2,8 +2,8 @@ package ru.cherryperry.instavideo.presentation.complete
 
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
 import ru.cherryperry.instavideo.presentation.conversion.CompletePresenter
@@ -19,27 +19,24 @@ class CompletePresenterTest {
         private val URI_TARGET = Uri.parse("test://target")
     }
 
+    private val router = mockk<Router>(relaxUnitFun = true)
+    private val presenter = CompletePresenter(URI_TARGET, router)
+
     @Test
     fun onOpenResultClick() {
-        val router = mock<Router>()
-        val presenter = CompletePresenter(URI_TARGET, router)
         presenter.onOpenResultClick()
-        verify(router).navigateTo(OpenVideoScreen(URI_TARGET))
+        verify { router.navigateTo(OpenVideoScreen(URI_TARGET)) }
     }
 
     @Test
     fun onConvertAnotherClick() {
-        val router = mock<Router>()
-        val presenter = CompletePresenter(URI_TARGET, router)
         presenter.onConvertAnotherClick()
-        verify(router).replaceScreen(PickerScreen)
+        verify { router.replaceScreen(PickerScreen) }
     }
 
     @Test
     fun onCloseClick() {
-        val router = mock<Router>()
-        val presenter = CompletePresenter(URI_TARGET, router)
         presenter.onCloseClick()
-        verify(router).navigateTo(CloseScreen)
+        verify { router.navigateTo(CloseScreen) }
     }
 }

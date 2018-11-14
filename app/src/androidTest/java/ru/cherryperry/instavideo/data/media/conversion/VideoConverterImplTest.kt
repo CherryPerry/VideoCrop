@@ -24,7 +24,7 @@ class VideoConverterImplTest {
 
     @Rule
     @JvmField
-    val expectedException = ExpectedException.none()
+    val expectedException: ExpectedException = ExpectedException.none()
 
     private val outputFile = File(ApplicationProvider.getApplicationContext<Context>().filesDir, "test.mp4").absolutePath
 

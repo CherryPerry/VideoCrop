@@ -3,10 +3,13 @@ package ru.cherryperry.instavideo.presentation.conversion
 import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.Ordering
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Flowable
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.domain.conversion.ConvertParams
 import ru.cherryperry.instavideo.domain.conversion.ConvertUseCase
 import ru.cherryperry.instavideo.presentation.navigation.CompleteScreen
@@ -24,30 +27,31 @@ class ConversionPresenterTest {
         private val RECT_F = RectF(0.1f, 0.2f, 0.3f, 0.4f)
     }
 
+    private val useCase = mockk<ConvertUseCase> {
+        every { run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F)) } returns Flowable.just(1f)
+    }
+    private val router = mockk<Router>(relaxUnitFun = true)
+    private val view = mockk<ConversionView>(relaxUnitFun = true)
+    private val presenter = ConversionPresenter(URI_SOURCE, URI_TARGET, START, END, RECT_F, useCase, router)
+
     @Test
     fun convertNormal() {
-        val useCase = Mockito.mock(ConvertUseCase::class.java)
-        Mockito.`when`(useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F)))
-            .thenReturn(Flowable.just(1f))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(ConversionView::class.java)
-        val presenter = ConversionPresenter(URI_SOURCE, URI_TARGET, START, END, RECT_F, useCase, router)
         presenter.attachView(view)
-        Mockito.verify(useCase).run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
-        Mockito.verify(view).showProgress(1f)
-        Mockito.verify(router).replaceScreen(CompleteScreen(URI_TARGET))
+        verify(ordering = Ordering.ORDERED) {
+            useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
+            view.showProgress(1f)
+            router.replaceScreen(CompleteScreen(URI_TARGET))
+        }
     }
 
     @Test
     fun convertError() {
-        val useCase = Mockito.mock(ConvertUseCase::class.java)
-        Mockito.`when`(useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F)))
-            .thenReturn(Flowable.error(IllegalStateException()))
-        val router = Mockito.mock(Router::class.java)
-        val view = Mockito.mock(ConversionView::class.java)
-        val presenter = ConversionPresenter(URI_SOURCE, URI_TARGET, START, END, RECT_F, useCase, router)
+        every { useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F)) } returns
+            Flowable.error(IllegalStateException())
         presenter.attachView(view)
-        Mockito.verify(useCase).run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
-        Mockito.verify(router).replaceScreen(ErrorScreen)
+        verify(ordering = Ordering.ORDERED) {
+            useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
+            router.replaceScreen(ErrorScreen)
+        }
     }
 }
