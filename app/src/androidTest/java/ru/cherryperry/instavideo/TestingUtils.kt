@@ -38,6 +38,9 @@ class EmptyAndroidInjector : AndroidInjector<Fragment> {
 object AssetsInfo {
 
     const val SAMPLE_1_DURATION_MS = 5312L
+    const val SAMPLE_1_WIDTH = 1280L
+    const val SAMPLE_1_HEIGHT = 720L
+
 }
 
 /** [Resources] of androidTest folder. */

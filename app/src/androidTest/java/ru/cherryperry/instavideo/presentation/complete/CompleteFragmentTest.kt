@@ -78,7 +78,7 @@ class CompleteFragmentTest {
     ])
     interface TestComponent : AndroidInjector<CompleteFragment>, TestInjector<CompleteFragmentTest> {
 
-        @dagger.Component.Builder
+        @Component.Builder
         abstract class Builder : AndroidInjector.Builder<CompleteFragment>() {
 
             abstract fun module(module: TestModule): Builder

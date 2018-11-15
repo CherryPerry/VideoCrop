@@ -183,8 +183,8 @@ class TimeSelectorView @JvmOverloads constructor(
     fun setLimit(@FloatRange(from = 0.0) range: Float) {
         (range < 0f) illegalArgument "Limit can't be less than 0"
         limit = range
-        validateLeftPosition()
         validateRightPosition()
+        validateLeftPosition()
     }
 
     private fun changePosition(event: MotionEvent) {

@@ -24,6 +24,7 @@ import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
 import ru.cherryperry.instavideo.presentation.util.saf.StorageAccessFramework
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @RunWith(AndroidJUnit4::class)
 class PickerFragmentTest {
@@ -68,18 +69,22 @@ class PickerFragmentTest {
     class TestModule {
 
         @get:Provides
+        @get:Singleton
         val storageAccessFramework = mockk<StorageAccessFramework>(relaxUnitFun = true)
+
         @get:Provides
+        @get:Singleton
         val presenter = mockk<PickerPresenter>(relaxed = true)
     }
 
+    @Singleton
     @Component(modules = [
         AndroidSupportInjectionModule::class,
         TestModule::class
     ])
     interface TestComponent : AndroidInjector<PickerFragment>, TestInjector<PickerFragmentTest> {
 
-        @dagger.Component.Builder
+        @Component.Builder
         abstract class Builder : AndroidInjector.Builder<PickerFragment>() {
 
             abstract fun module(module: TestModule): Builder

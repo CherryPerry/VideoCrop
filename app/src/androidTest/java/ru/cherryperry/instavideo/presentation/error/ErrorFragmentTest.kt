@@ -60,7 +60,7 @@ class ErrorFragmentTest {
     ])
     interface TestComponent : AndroidInjector<ErrorFragment>, TestInjector<ErrorFragmentTest> {
 
-        @dagger.Component.Builder
+        @Component.Builder
         abstract class Builder : AndroidInjector.Builder<ErrorFragment>() {
 
             abstract fun module(module: TestModule): Builder

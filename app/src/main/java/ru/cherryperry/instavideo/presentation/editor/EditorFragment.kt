@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.TextureView
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -33,7 +34,6 @@ import ru.cherryperry.instavideo.presentation.util.scaledBottom
 import ru.cherryperry.instavideo.presentation.util.scaledLeft
 import ru.cherryperry.instavideo.presentation.util.scaledRight
 import ru.cherryperry.instavideo.presentation.util.scaledTop
-import ru.terrakok.cicerone.Router
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Provider
@@ -63,8 +63,6 @@ class EditorFragment : BaseFragment(), EditorView {
         fun videoUri(bundle: Bundle): Uri = bundle.getParcelable(VIDEO_URI)!!
     }
 
-    @Inject
-    lateinit var router: Router
     @Inject
     lateinit var storageAccessFramework: StorageAccessFramework
     @Inject
@@ -128,13 +126,11 @@ class EditorFragment : BaseFragment(), EditorView {
     }
 
     override fun showVideo(uri: Uri, fromUs: Long, toUs: Long) {
-        if (fromUs == C.TIME_UNSET && toUs != C.TIME_UNSET
-            || fromUs != C.TIME_UNSET && toUs == C.TIME_UNSET) {
-            throw IllegalArgumentException("Must be both TIME_UNSET")
-        }
-        if (fromUs != C.TIME_UNSET && fromUs > toUs) {
-            throw IllegalArgumentException("Start can't be later than end")
-        }
+        (fromUs == C.TIME_UNSET && toUs != C.TIME_UNSET
+            || fromUs != C.TIME_UNSET && toUs == C.TIME_UNSET) illegalArgument "Must be both TIME_UNSET"
+        (fromUs != C.TIME_UNSET && fromUs < 0) illegalArgument "Start can't be negative"
+        (toUs != C.TIME_UNSET && toUs < 0) illegalArgument "End can't be negative"
+        (fromUs > toUs) illegalArgument "Start can't be later than end"
         val dataSourceFactory = DefaultDataSourceFactory(context, "No-Agent")
         val originalMediaSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
         val mediaSource = if (fromUs != C.TIME_UNSET) {
@@ -224,6 +220,10 @@ class EditorFragment : BaseFragment(), EditorView {
         textureScaledRectF.bottom /= limitView.height
         presenter.onOutputSelected(uri, textureScaledRectF)
     }
+
+    /** Should be removed! Bad practice. */
+    @VisibleForTesting
+    fun checkPlayer() = player
 
     /** Callback for [ScaleGestureDetector] to scale up and down [textureView]. Limits it scale size. */
     private inner class ScaleGestureCallback : ScaleGestureDetector.SimpleOnScaleGestureListener() {

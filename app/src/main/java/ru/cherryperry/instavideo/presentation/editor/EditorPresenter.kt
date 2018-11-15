@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
-class EditorPresenter @Inject constructor(
+open class EditorPresenter @Inject constructor(
     private val uri: Uri,
     private val videoFileMetaDataUseCase: VideoFileMetaDataUseCase,
     private val router: Router
@@ -47,12 +47,12 @@ class EditorPresenter @Inject constructor(
             .untilDestroy()
     }
 
-    fun onPlayVideoError() {
+    open fun onPlayVideoError() {
         viewState.showState(EditorView.State.ERROR)
     }
 
     /** User selects different time span of video. */
-    fun onSelectionChanged(
+    open fun onSelectionChanged(
         @FloatRange(from = 0.0, to = 1.0) from: Float,
         @FloatRange(from = 0.0, to = 1.0) to: Float
     ) {
@@ -67,7 +67,7 @@ class EditorPresenter @Inject constructor(
     }
 
     /** User has selected conversion result file, start conversion now. */
-    fun onOutputSelected(targetUri: Uri, sourceRect: RectF) {
+    open fun onOutputSelected(targetUri: Uri, sourceRect: RectF) {
         (durationUs == C.TIME_UNSET) illegalState "Duration is not ready yet"
         val start = if (startUs == C.TIME_UNSET) 0 else startUs
         val end = if (endUs == C.TIME_UNSET) Long.MAX_VALUE else endUs

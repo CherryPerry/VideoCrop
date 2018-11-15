@@ -27,6 +27,7 @@ import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
 import ru.cherryperry.instavideo.onFragmentException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @RunWith(AndroidJUnit4::class)
 class ConversionFragmentTest {
@@ -52,7 +53,6 @@ class ConversionFragmentTest {
     fun before() {
         val fragment = ConversionFragment.newInstance(SOURCE_URI, TARGET_URI, START, END, RECT_F)
         val component = DaggerConversionFragmentTest_TestComponent.builder()
-            .module(TestModule())
             .create(fragment) as DaggerConversionFragmentTest_TestComponent
         component.injectTest(this)
         scenario = FragmentScenario.launchInContainer(fragment.javaClass, fragment.arguments,
@@ -99,16 +99,18 @@ class ConversionFragmentTest {
     class TestModule {
 
         @get:Provides
+        @get:Singleton
         val presenter = mockk<ConversionPresenter>(relaxed = true)
     }
 
+    @Singleton
     @Component(modules = [
         AndroidSupportInjectionModule::class,
         TestModule::class
     ])
     interface TestComponent : AndroidInjector<ConversionFragment>, TestInjector<ConversionFragmentTest> {
 
-        @dagger.Component.Builder
+        @Component.Builder
         abstract class Builder : AndroidInjector.Builder<ConversionFragment>() {
 
             abstract fun module(module: TestModule): Builder
