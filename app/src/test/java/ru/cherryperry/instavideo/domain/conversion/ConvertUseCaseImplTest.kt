@@ -5,10 +5,9 @@ import android.graphics.RectF
 import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.Ordering
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.verifyOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RuntimeEnvironment
@@ -48,7 +47,7 @@ class ConvertUseCaseImplTest {
             .assertValues(0f, 0.5f, 1f)
             .dispose()
         val path = fileProxy.proxyFile.absolutePath
-        verify(ordering = Ordering.ORDERED) {
+        verifyOrder {
             converter.process(any(), START_US, END_US, CROP, path, any())
             fileProxy.copyProxyToResult(URI_TARGET)
             converter.close()

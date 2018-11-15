@@ -3,10 +3,9 @@ package ru.cherryperry.instavideo.presentation.conversion
 import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.Ordering
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.verifyOrder
 import io.reactivex.Flowable
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +36,7 @@ class ConversionPresenterTest {
     @Test
     fun convertNormal() {
         presenter.attachView(view)
-        verify(ordering = Ordering.ORDERED) {
+        verifyOrder {
             useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
             view.showProgress(1f)
             router.replaceScreen(CompleteScreen(URI_TARGET))
@@ -49,7 +48,7 @@ class ConversionPresenterTest {
         every { useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F)) } returns
             Flowable.error(IllegalStateException())
         presenter.attachView(view)
-        verify(ordering = Ordering.ORDERED) {
+        verifyOrder {
             useCase.run(ConvertParams(URI_SOURCE, URI_TARGET, START, END, RECT_F))
             router.replaceScreen(ErrorScreen)
         }

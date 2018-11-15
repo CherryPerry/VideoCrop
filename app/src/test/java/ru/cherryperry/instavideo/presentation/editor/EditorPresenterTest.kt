@@ -3,10 +3,10 @@ package ru.cherryperry.instavideo.presentation.editor
 import android.graphics.RectF
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.Ordering
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
@@ -41,7 +41,7 @@ class EditorPresenterTest {
     fun initialization() {
         // presenter should request video duration on first view attach
         presenter.attachView(view)
-        verify(ordering = Ordering.ORDERED) {
+        verifyOrder {
             useCase.run(URI_SOURCE)
             view.showState(EditorView.State.LOADING)
             view.showState(EditorView.State.NORMAL)
