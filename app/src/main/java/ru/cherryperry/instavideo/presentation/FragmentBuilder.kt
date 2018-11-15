@@ -5,14 +5,14 @@ import dagger.Module
 import dagger.android.AndroidInjector
 import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
-import ru.cherryperry.instavideo.presentation.conversion.CompleteFragment
-import ru.cherryperry.instavideo.presentation.conversion.CompleteFragmentSubcomponent
+import ru.cherryperry.instavideo.presentation.complete.CompleteFragment
+import ru.cherryperry.instavideo.presentation.complete.CompleteFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.conversion.ConversionFragment
 import ru.cherryperry.instavideo.presentation.conversion.ConversionFragmentSubcomponent
-import ru.cherryperry.instavideo.presentation.conversion.ErrorFragment
-import ru.cherryperry.instavideo.presentation.conversion.ErrorFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.editor.EditorFragment
 import ru.cherryperry.instavideo.presentation.editor.EditorFragmentSubcomponent
+import ru.cherryperry.instavideo.presentation.error.ErrorFragment
+import ru.cherryperry.instavideo.presentation.error.ErrorFragmentSubcomponent
 import ru.cherryperry.instavideo.presentation.picker.PickerFragment
 import ru.cherryperry.instavideo.presentation.picker.PickerFragmentSubcomponent
 

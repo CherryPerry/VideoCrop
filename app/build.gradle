@@ -67,7 +67,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'io.mockk:mockk:1.8.13'
+    testImplementation 'io.mockk:mockk:1.8.13.kotlin13'
     testImplementation 'org.robolectric:robolectric:4.0.2'
     testImplementation 'androidx.test:core:1.0.0'
     testImplementation 'androidx.test:runner:1.1.0'
@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
-    androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.19.1'
+    androidTestImplementation 'io.mockk:mockk-android:1.8.13.kotlin13'
 
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.19'
     kaptAndroidTest 'com.google.dagger:dagger-android-processor:2.19'

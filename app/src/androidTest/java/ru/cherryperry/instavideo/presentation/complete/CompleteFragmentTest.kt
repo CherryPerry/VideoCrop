@@ -11,15 +11,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.FragmentScenario
 import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
-import ru.cherryperry.instavideo.presentation.conversion.CompleteFragment
-import ru.cherryperry.instavideo.presentation.conversion.CompletePresenter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,19 +48,19 @@ class CompleteFragmentTest {
     @Test
     fun openResultClick() {
         Espresso.onView(ViewMatchers.withId(R.id.openResult)).perform(ViewActions.click())
-        Mockito.verify(presenter).onOpenResultClick()
+        verify { presenter.onOpenResultClick() }
     }
 
     @Test
     fun convertAnotherClick() {
         Espresso.onView(ViewMatchers.withId(R.id.convertAnother)).perform(ViewActions.click())
-        Mockito.verify(presenter).onConvertAnotherClick()
+        verify { presenter.onConvertAnotherClick() }
     }
 
     @Test
     fun closeClick() {
         Espresso.onView(ViewMatchers.withId(R.id.close)).perform(ViewActions.click())
-        Mockito.verify(presenter).onCloseClick()
+        verify { presenter.onCloseClick() }
     }
 
     @Module
@@ -69,7 +68,7 @@ class CompleteFragmentTest {
 
         @get:Provides
         @get:Singleton
-        val presenter: CompletePresenter = Mockito.mock(CompletePresenter::class.java)
+        val presenter = mockk<CompletePresenter>(relaxed = true)
     }
 
     @Singleton

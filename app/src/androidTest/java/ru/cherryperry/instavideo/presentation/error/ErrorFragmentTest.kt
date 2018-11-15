@@ -10,15 +10,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.FragmentScenario
 import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
-import ru.cherryperry.instavideo.presentation.conversion.ErrorFragment
-import ru.cherryperry.instavideo.presentation.conversion.ErrorPresenter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,7 +50,7 @@ class ErrorFragmentTest {
 
         @get:Provides
         @get:Singleton
-        val presenter: ErrorPresenter = Mockito.mock(ErrorPresenter::class.java)
+        val presenter = mockk<ErrorPresenter>(relaxed = true)
     }
 
     @Singleton

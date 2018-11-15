@@ -15,13 +15,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import io.mockk.mockk
 import org.hamcrest.Description
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.FragmentScenario
 import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
@@ -99,7 +99,7 @@ class ConversionFragmentTest {
     class TestModule {
 
         @get:Provides
-        val presenter: ConversionPresenter = Mockito.mock(ConversionPresenter::class.java)
+        val presenter = mockk<ConversionPresenter>(relaxed = true)
     }
 
     @Component(modules = [

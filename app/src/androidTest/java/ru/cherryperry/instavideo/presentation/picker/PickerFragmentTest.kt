@@ -13,10 +13,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import ru.cherryperry.instavideo.FragmentScenario
 import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.TestInjector
@@ -47,30 +49,28 @@ class PickerFragmentTest {
     @Test
     fun pickerButtonClick() {
         Espresso.onView(ViewMatchers.withText(R.string.picker_select_video)).perform(ViewActions.click())
-        scenario.onFragment {
-            Mockito.verify(storageAccessFramework).open(it)
-        }
+        verify { storageAccessFramework.open(any()) }
     }
 
     @Test
     fun storageAccessFrameworkResult() {
         val requestCode = 1
         val resultIntent = Intent().apply { data = Uri.EMPTY }
-        Mockito.`when`(storageAccessFramework.onActivityResultOpen(requestCode, Activity.RESULT_OK, resultIntent))
-            .thenReturn(Uri.EMPTY)
+        every { storageAccessFramework.onActivityResultOpen(requestCode, Activity.RESULT_OK, resultIntent) } returns
+            Uri.EMPTY
         scenario.onFragment {
             it.onActivityResult(requestCode, Activity.RESULT_OK, resultIntent)
-            Mockito.verify(presenter).onVideoSelected(Uri.EMPTY)
         }
+        verify { presenter.onVideoSelected(Uri.EMPTY) }
     }
 
     @Module
     class TestModule {
 
         @get:Provides
-        val storageAccessFramework: StorageAccessFramework = Mockito.mock(StorageAccessFramework::class.java)
+        val storageAccessFramework = mockk<StorageAccessFramework>(relaxUnitFun = true)
         @get:Provides
-        val presenter: PickerPresenter = Mockito.mock(PickerPresenter::class.java)
+        val presenter = mockk<PickerPresenter>(relaxed = true)
     }
 
     @Component(modules = [

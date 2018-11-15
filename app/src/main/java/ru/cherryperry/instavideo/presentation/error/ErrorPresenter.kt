@@ -1,4 +1,4 @@
-package ru.cherryperry.instavideo.presentation.conversion
+package ru.cherryperry.instavideo.presentation.error
 
 import com.arellomobile.mvp.InjectViewState
 import ru.cherryperry.instavideo.presentation.base.BasePresenter

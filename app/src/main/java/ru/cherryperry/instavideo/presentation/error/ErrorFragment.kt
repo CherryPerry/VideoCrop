@@ -1,4 +1,4 @@
-package ru.cherryperry.instavideo.presentation.conversion
+package ru.cherryperry.instavideo.presentation.error
 
 import android.os.Bundle
 import android.view.View

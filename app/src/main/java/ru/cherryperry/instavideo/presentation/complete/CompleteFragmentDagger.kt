@@ -1,4 +1,4 @@
-package ru.cherryperry.instavideo.presentation.conversion
+package ru.cherryperry.instavideo.presentation.complete
 
 import dagger.Module
 import dagger.Provides

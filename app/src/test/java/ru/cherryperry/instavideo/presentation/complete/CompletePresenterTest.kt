@@ -6,7 +6,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.cherryperry.instavideo.presentation.conversion.CompletePresenter
 import ru.cherryperry.instavideo.presentation.navigation.CloseScreen
 import ru.cherryperry.instavideo.presentation.navigation.OpenVideoScreen
 import ru.cherryperry.instavideo.presentation.navigation.PickerScreen
