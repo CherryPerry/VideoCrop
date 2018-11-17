@@ -10,8 +10,8 @@ android {
         applicationId 'ru.cherryperry.instavideo'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName '1.0'
+        versionCode 1_00_00
+        versionName '1.0.0'
 
         renderscriptTargetApi 21
         multiDexEnabled true
