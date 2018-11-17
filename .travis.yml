@@ -13,3 +13,14 @@ cache:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
   - $HOME/.android/build-cache
+before_deploy:
+  - ./gradlew assembleRelease
+  - mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/video-crop.apk
+deploy:
+  provider: releases
+  api_key: $GITHUB_API_KEY
+  file:
+    - "app/build/outputs/apk/release/video-crop.apk"
+  skip_cleanup: true
+  on:
+    tags: true

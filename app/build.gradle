@@ -13,19 +13,33 @@ android {
         versionCode 1
         versionName '1.0'
 
-        testApplicationId 'ru.cherryperry.instavideo.test'
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
+        renderscriptTargetApi 21
+        multiDexEnabled true
+        resConfigs 'en'
         vectorDrawables.useSupportLibrary true
 
-        renderscriptTargetApi 19
+        testApplicationId 'ru.cherryperry.instavideo.test'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
 
-        multiDexEnabled true
+    signingConfigs {
+        release {
+            storeFile file('keystore.jks')
+            storePassword '123456'
+            keyAlias 'alias'
+            keyPassword '123456'
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
+
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,15 +56,15 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.annotation:annotation:1.0.0'
     implementation 'androidx.media:media:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
 
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.0'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
 
     implementation 'com.arello-mobile:moxy:1.5.5'
     kapt 'com.arello-mobile:moxy-compiler:1.5.5'
