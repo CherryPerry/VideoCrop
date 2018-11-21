@@ -24,10 +24,8 @@ class CustomSupportAppNavigator(
                 }
                 is OpenVideoScreen -> {
                     val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = screen.uri
-                    intent.type = MimeTypes.VIDEO_H264
+                    intent.setDataAndType(screen.uri, MimeTypes.VIDEO_H264)
                     if (intent.resolveActivity(activity.packageManager) != null) {
-                        intent.data = screen.uri
                         activity.startActivity(intent)
                     }
                     return
