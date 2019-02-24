@@ -7,12 +7,7 @@ ushort width;
 ushort height;
 ushort type;
 
-void RS_KERNEL convert(uchar4 v_in, uint32_t x, uint32_t y) {
-    uint3 yuv_v;
-    yuv_v.s0 = clamp(((66 * v_in.r + 129 * v_in.g + 25 * v_in.b + 128) >> 8) + 16, 0, 255);
-    yuv_v.s1 = clamp(((-38 * v_in.r - 74 * v_in.g + 112 * v_in.b + 128) >> 8) + 128, 0, 255);
-    yuv_v.s2 = clamp(((112 * v_in.r - 94 * v_in.g - 18 * v_in.b + 128) >> 8) + 128, 0, 255);
-
+uchar4 RS_KERNEL convert(uint32_t x, uint32_t y) {
     uint3 yuv_p;
     if (type == 0) {
         // YUV420P
@@ -39,10 +34,9 @@ void RS_KERNEL convert(uchar4 v_in, uint32_t x, uint32_t y) {
         yuv_p.s1 = yuv_p.s2 + 1;
     }
 
-    rsSetElementAt_uchar(yuv, yuv_v.s0, yuv_p.s0);
-
-    if (x % 2 == 0 && y % 2 == 0) {
-        rsSetElementAt_uchar(yuv, yuv_v.s1, yuv_p.s1);
-        rsSetElementAt_uchar(yuv, yuv_v.s2, yuv_p.s2);
-    }
+    uchar3 yuv_v;
+    yuv_v.s0 = rsGetElementAt_uchar(yuv, yuv_p.s0);
+    yuv_v.s1 = rsGetElementAt_uchar(yuv, yuv_p.s1);
+    yuv_v.s2 = rsGetElementAt_uchar(yuv, yuv_p.s2);
+    return rsYuvToRGBA_uchar4(yuv_v.s0, yuv_v.s1, yuv_v.s2);
 }

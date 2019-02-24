@@ -1,6 +1,7 @@
 package ru.cherryperry.instavideo.data.media.codec
 
 import android.media.MediaCodec
+import android.media.MediaFormat
 import java.nio.ByteBuffer
 
 /** Wait for [MediaCodec.dequeueInputBuffer] until ready. */
@@ -36,3 +37,15 @@ fun <T> MediaCodec.withInputBuffer(block: (Int, ByteBuffer) -> T): T {
     val buffer: ByteBuffer = this.getInputBuffer(bufferId)!!
     return block(bufferId, buffer)
 }
+
+/**
+ * [MediaFormat.KEY_MIME] of [MediaCodec.getOutputFormat].
+ */
+val MediaCodec.outputMimeType: String
+    get() = this.outputFormat.getString(MediaFormat.KEY_MIME)
+
+/**
+ * [MediaFormat.KEY_MIME] of [MediaCodec.getInputFormat].
+ */
+val MediaCodec.inputMimeType: String
+    get() = this.inputFormat.getString(MediaFormat.KEY_MIME)

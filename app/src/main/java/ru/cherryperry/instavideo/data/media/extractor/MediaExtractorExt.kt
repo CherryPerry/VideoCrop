@@ -21,3 +21,10 @@ fun MediaExtractor.unselectTrack(mediaExtractorData: MediaExtractorData) {
  */
 fun MediaExtractor.getTrackData(index: Int): MediaExtractorData =
     MediaExtractorData(index, this.getTrackFormat(index))
+
+inline fun <T> MediaExtractor.use(block: MediaExtractor.() -> T): T =
+    try {
+        block(this)
+    } finally {
+        this.release()
+    }

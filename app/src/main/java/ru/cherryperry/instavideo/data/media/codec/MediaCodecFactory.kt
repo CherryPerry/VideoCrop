@@ -4,9 +4,8 @@ import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
 import android.media.MediaFormat
-import android.os.Build
 import com.google.android.exoplayer2.util.MimeTypes
-import ru.cherryperry.instavideo.core.apiLevel
+import ru.cherryperry.instavideo.data.media.conversion.async.CodecHolder
 
 object MediaCodecFactory {
 
@@ -20,7 +19,7 @@ object MediaCodecFactory {
 
     private val mediaCodecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
 
-    fun createVideoEncoder(fps: Int = DEFAULT_FPS): MediaCodec {
+    fun createVideoEncoder(fps: Int = DEFAULT_FPS): CodecHolder {
         val mediaFormat = MediaFormat.createVideoFormat(MimeTypes.VIDEO_H264, DEFAULT_SIZE, DEFAULT_SIZE)
         val name = mediaCodecList.findEncoderForFormat(mediaFormat)
         val encoder = MediaCodec.createByCodecName(name)
@@ -29,28 +28,21 @@ object MediaCodecFactory {
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, DEFAULT_VIDEO_BITRATE)
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, fps)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, DEFAULT_I_FRAME_INTERVAL)
-        mediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline)
-        apiLevel(Build.VERSION_CODES.M) {
-            mediaFormat.setInteger(MediaFormat.KEY_LEVEL, MediaCodecInfo.CodecProfileLevel.AVCLevel31)
-        }
-        encoder.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-        return encoder
+        return CodecHolder(encoder, CodecHolder.Initialization(mediaFormat, true))
     }
 
-    fun createAudioEncoder(sampleRate: Int = DEFAULT_SAMPLE_RATE, channelCount: Int = DEFAULT_CHANNEL_COUNT): MediaCodec {
+    fun createAudioEncoder(sampleRate: Int = DEFAULT_SAMPLE_RATE, channelCount: Int = DEFAULT_CHANNEL_COUNT): CodecHolder {
         val mediaFormat = MediaFormat.createAudioFormat(MimeTypes.AUDIO_AAC, sampleRate, channelCount)
         mediaFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, DEFAULT_AUDIO_BITRATE)
         val name = mediaCodecList.findEncoderForFormat(mediaFormat)
         val encoder = MediaCodec.createByCodecName(name)
-        encoder.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-        return encoder
+        return CodecHolder(encoder, CodecHolder.Initialization(mediaFormat, true))
     }
 
-    fun createDecoderAndConfigure(mediaFormat: MediaFormat): MediaCodec {
+    fun createDecoderAndConfigure(mediaFormat: MediaFormat): CodecHolder {
         val name = mediaCodecList.findDecoderForFormat(mediaFormat)
         val decoder = MediaCodec.createByCodecName(name)
-        decoder.configure(mediaFormat, null, null, 0)
-        return decoder
+        return CodecHolder(decoder, CodecHolder.Initialization(mediaFormat, false))
     }
 }

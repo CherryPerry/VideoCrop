@@ -5,14 +5,17 @@ import android.graphics.BitmapFactory
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicYuvToRGB
-import android.renderscript.Type
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import ru.cherryperry.instavideo.data.media.renderscript.ScriptC_RgbToYuv
+import ru.cherryperry.instavideo.data.media.renderscript.ScriptC_YuvToRgb
+import ru.cherryperry.instavideo.data.media.renderscript.YuvType
+import ru.cherryperry.instavideo.data.media.renderscript.yuvAllocationSize
 import ru.cherryperry.instavideo.testResources
+
 
 @RunWith(Parameterized::class)
 class RgbToYuvTest(
@@ -24,9 +27,9 @@ class RgbToYuvTest(
         @Parameterized.Parameters(name = "{0}")
         fun data(): Collection<Array<Any>> {
             return listOf(
-                arrayOf<Any>("sample_image_2x2.jpg"),
-                arrayOf<Any>("sample_image_4x4.jpg"),
-                arrayOf<Any>("sample_image_64x32.jpg"),
+                //arrayOf<Any>("sample_image_2x2.jpg"),
+                //arrayOf<Any>("sample_image_4x4.jpg"),
+                //arrayOf<Any>("sample_image_64x32.jpg"),
                 arrayOf<Any>("sample_image_400x400.jpg")
             )
         }
@@ -41,10 +44,11 @@ class RgbToYuvTest(
         // convert to yuv
         val renderScript = RenderScript.create(ApplicationProvider.getApplicationContext())
         val rgbToYuv = ScriptC_RgbToYuv(renderScript)
-        val yuvAllocation = Allocation.createSized(renderScript, Element.U8(renderScript), bitmap.width * bitmap.height * 3 / 2)
+        val yuvAllocation = Allocation.createSized(renderScript, Element.U8(renderScript), yuvAllocationSize(bitmap.width, bitmap.height))
+        rgbToYuv._yuv = yuvAllocation
         rgbToYuv._height = bitmap.height
         rgbToYuv._width = bitmap.width
-        rgbToYuv._yuvAllocation = yuvAllocation
+        rgbToYuv._type = YuvType.YUV420SemiPlanarNV21.id
         val bitmapAllocation = Allocation.createFromBitmap(renderScript, bitmap)
         rgbToYuv.forEach_convert(bitmapAllocation)
 
@@ -57,19 +61,25 @@ class RgbToYuvTest(
         Assert.assertArrayEquals(kotlinImplementation, byteArray)
 
         // convert back to rgb
-        val yuvToRgb = ScriptIntrinsicYuvToRGB.create(renderScript, Element.U8_4(renderScript))
-        val yuvType = Type.Builder(renderScript, Element.U8(renderScript)).setX(byteArray.size)
-        val inData = Allocation.createTyped(renderScript, yuvType.create(), Allocation.USAGE_SCRIPT)
-        val rgbaType = Type.Builder(renderScript, Element.RGBA_8888(renderScript)).setX(bitmap.width).setY(bitmap.height)
-        val outData = Allocation.createTyped(renderScript, rgbaType.create(), Allocation.USAGE_SCRIPT)
-        inData.copyFrom(byteArray)
-        yuvToRgb.setInput(inData)
-        yuvToRgb.forEach(outData)
 
         val decodedBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        val outData = Allocation.createFromBitmap(renderScript, decodedBitmap)
+
+        val yuvToRgb = ScriptC_YuvToRgb(renderScript)
+        yuvToRgb._yuv = yuvAllocation
+        yuvToRgb._height = bitmap.height
+        yuvToRgb._width = bitmap.width
+        yuvToRgb._type = YuvType.YUV420SemiPlanarNV21.id
+        yuvToRgb.forEach_convert(outData)
+
+        /*val yuvToRgb = ScriptIntrinsicYuvToRGB.create(renderScript, Element.U8_4(renderScript))
+        yuvToRgb.setInput(yuvAllocation)
+        yuvToRgb.forEach(outData)*/
+
         outData.copyTo(decodedBitmap)
 
         // check bitmap is valid in debugger!
         // color data is lost after conversion especially on small images
+        val breakPointMe = decodedBitmap.byteCount
     }
 }

@@ -27,7 +27,7 @@ class VideoFileMetaDataUseCaseImplTest {
 
     @Test
     fun failure() {
-        val throwable = InvalidVideoFileException()
+        val throwable = InvalidVideoFileException(Exception())
         every { mediaMetadataRepository.getMetaData(Uri.EMPTY) } returns Single.error(throwable)
         useCase.run(Uri.EMPTY)
             .test()

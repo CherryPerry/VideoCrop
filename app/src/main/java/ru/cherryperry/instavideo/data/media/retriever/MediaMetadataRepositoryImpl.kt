@@ -18,27 +18,26 @@ class MediaMetadataRepositoryImpl @Inject constructor(
 
     fun getMetaData(mediaMetadataRetrieverSource: MediaMetadataRetrieverSource): Single<VideoFileMetaData> = Single
         .fromCallable {
-            val retriever = MediaMetadataRetriever()
             try {
-                mediaMetadataRetrieverSource.setDataSource(retriever)
-                val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                val width: String
-                val height: String
-                // video can be rotated
-                val rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
-                if (rotation == null || rotation == "0" || rotation == "180") {
-                    width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
-                    height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
-                } else {
-                    // if it is rotated to it's side, swap width and height from metadata
-                    width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
-                    height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                MediaMetadataRetriever().use {
+                    mediaMetadataRetrieverSource.setDataSource(this)
+                    val duration = extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                    val width: String
+                    val height: String
+                    // video can be rotated
+                    val rotation = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+                    if (rotation == null || rotation == "0" || rotation == "180") {
+                        width = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                        height = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+                    } else {
+                        // if it is rotated to it's side, swap width and height from metadata
+                        width = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+                        height = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+                    }
+                    VideoFileMetaData(width.toLong(), height.toLong(), duration.toLong())
                 }
-                VideoFileMetaData(width.toLong(), height.toLong(), duration.toLong())
             } catch (exception: Exception) {
-                throw InvalidVideoFileException()
-            } finally {
-                retriever.release()
+                throw InvalidVideoFileException(exception)
             }
         }.subscribeOn(Schedulers.io())
 }
