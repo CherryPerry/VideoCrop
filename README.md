@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/CherryPerry/VideoCrop.svg?branch=master)](https://travis-ci.com/CherryPerry/VideoCrop)
 [![Version](https://img.shields.io/github/release/CherryPerry/VideoCrop.svg)](https://github.com/CherryPerry/VideoCrop/releases)
+[![License](https://img.shields.io/badge/license-WTFPL-green.svg)](https://github.com/CherryPerry/VideoCrop/blob/master/LICENSE)
 
 You can crop video to make it square and be less than 20 seconds in duration.
 
@@ -19,3 +20,7 @@ Frames are saved to file with help of [MediaMuxer](https://developer.android.com
 ![screenshot_20181117-134741](https://user-images.githubusercontent.com/9081555/48660389-d1fca680-ea71-11e8-80a8-c2fba443fefe.png)
 ![screenshot_20181117-134814](https://user-images.githubusercontent.com/9081555/48660390-d1fca680-ea71-11e8-96b1-0c3a0d6492f1.png)
 ![screenshot_20181117-135409](https://user-images.githubusercontent.com/9081555/48660386-d1641000-ea71-11e8-9fc5-5926f132e95b.png)
+
+#### License
+
+[WTFPL](https://github.com/CherryPerry/VideoCrop/blob/master/LICENSE) because I don't even know if this code works on devices other than mine.
