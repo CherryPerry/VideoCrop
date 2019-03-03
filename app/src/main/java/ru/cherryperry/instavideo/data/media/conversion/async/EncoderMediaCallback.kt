@@ -34,7 +34,7 @@ class EncoderMediaCallback(
             if (it.bufferInfo.size > 0) {
                 frameProcessor.process(
                     FrameData(it.byteBuffer, it.bufferInfo, it.mediaFormat),
-                    FrameData(byteBuffer, codec.codec.outputFormat)
+                    FrameData(byteBuffer, codec.outputFormat)
                 )
             }
             codec.queueInputBuffer(index, 0, byteBuffer.limit(), it.bufferInfo.presentationTimeUs, it.bufferInfo.flags)
@@ -44,14 +44,14 @@ class EncoderMediaCallback(
 
     override fun onOutputBufferAvailable(codec: CodecHolder, index: Int, info: MediaCodec.BufferInfo) {
         Timber.d("onOutputBufferAvailable: index %d, counter %d", index, outputBufferCounter.getAndIncrement())
-        if (mediaSink.applyCodec(codec.codec.outputFormat)) {
+        if (mediaSink.applyCodec(codec.outputFormat)) {
             Timber.d("Codec is applied")
         }
         Timber.d("onOutputBufferAvailable: time %d size %d", info.presentationTimeUs, info.size)
         if (info.size > 0) {
             val buffer = codec.getOutputBuffer(index)
             Timber.d("Write encoded data to file")
-            mediaSink.sink(codec.codec.outputFormat, buffer, info)
+            mediaSink.sink(codec.outputFormat, buffer, info)
             frameCompleteCallback(info.presentationTimeUs)
         }
         codec.releaseOutputBuffer(index)

@@ -17,8 +17,8 @@ class CodecHolder(
     val currentState: State
         get() = state
 
-    // TODO Remove
-    val codec: MediaCodec = mediaCodec
+    val outputFormat: MediaFormat
+        get() = mediaCodec.outputFormat
 
     @Synchronized
     fun configure(callback: MediaCodec.Callback, handler: Handler) {

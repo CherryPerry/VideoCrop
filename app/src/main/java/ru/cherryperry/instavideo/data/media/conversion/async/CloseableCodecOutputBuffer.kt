@@ -15,7 +15,7 @@ class CloseableCodecOutputBuffer(
     private val hander: Handler
 ) : Closeable {
 
-    val mediaFormat = codecHolder.codec.outputFormat
+    val mediaFormat = codecHolder.outputFormat
 
     init {
         Timber.d("Create buffer %s", debug)
