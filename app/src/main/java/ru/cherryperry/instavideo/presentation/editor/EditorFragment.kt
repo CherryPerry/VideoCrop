@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ClippingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.core.illegalArgument
 import ru.cherryperry.instavideo.presentation.base.BaseFragment
 import ru.cherryperry.instavideo.presentation.util.TimeSelectorView

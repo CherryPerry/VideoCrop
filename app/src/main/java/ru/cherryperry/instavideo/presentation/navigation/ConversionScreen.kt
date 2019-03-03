@@ -4,7 +4,7 @@ import android.graphics.RectF
 import android.net.Uri
 import androidx.fragment.app.Fragment
 import ru.cherryperry.instavideo.presentation.conversion.ConversionFragment
-import ru.cherryperry.instavideo.presentation.navigation.cicerone.SupportAppScreen
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 data class ConversionScreen(
     private val inputUri: Uri,
