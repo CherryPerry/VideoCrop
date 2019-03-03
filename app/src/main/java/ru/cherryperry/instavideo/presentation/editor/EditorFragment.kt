@@ -23,7 +23,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ClippingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.core.illegalArgument
 import ru.cherryperry.instavideo.presentation.base.BaseFragment
 import ru.cherryperry.instavideo.presentation.util.TimeSelectorView
@@ -126,8 +125,8 @@ class EditorFragment : BaseFragment(), EditorView {
     }
 
     override fun showVideo(uri: Uri, fromUs: Long, toUs: Long) {
-        (fromUs == C.TIME_UNSET && toUs != C.TIME_UNSET
-            || fromUs != C.TIME_UNSET && toUs == C.TIME_UNSET) illegalArgument "Must be both TIME_UNSET"
+        (fromUs == C.TIME_UNSET && toUs != C.TIME_UNSET ||
+            fromUs != C.TIME_UNSET && toUs == C.TIME_UNSET) illegalArgument "Must be both TIME_UNSET"
         (fromUs != C.TIME_UNSET && fromUs < 0) illegalArgument "Start can't be negative"
         (toUs != C.TIME_UNSET && toUs < 0) illegalArgument "End can't be negative"
         (fromUs > toUs) illegalArgument "Start can't be later than end"

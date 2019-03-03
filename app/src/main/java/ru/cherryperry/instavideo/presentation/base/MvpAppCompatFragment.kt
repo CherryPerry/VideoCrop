@@ -48,7 +48,7 @@ open class MvpAppCompatFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
 
-        //We leave the screen and respectively all fragments will be destroyed
+        // We leave the screen and respectively all fragments will be destroyed
         if (activity!!.isFinishing) {
             mvpDelegate.onDestroy()
             return

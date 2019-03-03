@@ -17,11 +17,7 @@ class MediaSink(
     private val configured = false
 
     fun applyCodec(mediaFormat: MediaFormat): Boolean {
-        if (configured) {
-            return false
-        }
-        val mime = mediaFormat.getString(MediaFormat.KEY_MIME)
-        if (map.containsKey(mime)) {
+        if (configured || map.containsKey(mediaFormat.getString(MediaFormat.KEY_MIME))) {
             return false
         }
         synchronized(mediaMuxer) {

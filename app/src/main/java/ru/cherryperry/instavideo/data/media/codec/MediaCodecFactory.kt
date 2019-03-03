@@ -20,18 +20,25 @@ object MediaCodecFactory {
     private val mediaCodecList = MediaCodecList(MediaCodecList.REGULAR_CODECS)
 
     fun createVideoEncoder(fps: Int = DEFAULT_FPS): CodecHolder {
+        val safeFps = if (fps > 0) fps else DEFAULT_FPS
         val mediaFormat = MediaFormat.createVideoFormat(MimeTypes.VIDEO_H264, DEFAULT_SIZE, DEFAULT_SIZE)
         val name = mediaCodecList.findEncoderForFormat(mediaFormat)
         val encoder = MediaCodec.createByCodecName(name)
-        mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible)
+        mediaFormat.setInteger(
+            MediaFormat.KEY_COLOR_FORMAT,
+            MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible
+        )
         mediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR)
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, DEFAULT_VIDEO_BITRATE)
-        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, fps)
+        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, safeFps)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, DEFAULT_I_FRAME_INTERVAL)
         return CodecHolder(encoder, CodecHolder.Initialization(mediaFormat, true))
     }
 
-    fun createAudioEncoder(sampleRate: Int = DEFAULT_SAMPLE_RATE, channelCount: Int = DEFAULT_CHANNEL_COUNT): CodecHolder {
+    fun createAudioEncoder(
+        sampleRate: Int = DEFAULT_SAMPLE_RATE,
+        channelCount: Int = DEFAULT_CHANNEL_COUNT
+    ): CodecHolder {
         val mediaFormat = MediaFormat.createAudioFormat(MimeTypes.AUDIO_AAC, sampleRate, channelCount)
         mediaFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, DEFAULT_AUDIO_BITRATE)

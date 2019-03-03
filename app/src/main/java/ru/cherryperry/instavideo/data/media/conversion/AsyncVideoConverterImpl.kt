@@ -92,7 +92,7 @@ class AsyncVideoConverterImpl @Inject constructor(
     ) {
         // peek video frame for additional data in output format
         val videoDecoder = MediaCodecFactory.createDecoderAndConfigure(videoData.mediaFormat)
-        val videoFps = videoData.mediaFormat.getIntegerDefault(MediaFormat.KEY_FRAME_RATE, 30)
+        val videoFps = videoData.mediaFormat.getIntegerDefault(MediaFormat.KEY_FRAME_RATE, 0)
         val videoEncoder = MediaCodecFactory.createVideoEncoder(videoFps)
         val rotation = if (videoData.mediaFormat.containsKey(MediaFormat.KEY_ROTATION)) {
             videoData.mediaFormat.getInteger(MediaFormat.KEY_ROTATION)
@@ -139,7 +139,9 @@ class AsyncVideoConverterImpl @Inject constructor(
         videoEncoderHandler.postAndWait {
             videoEncoder.configure(videoEncoderCallback, videoEncoderHandler)
         }
-        val videoDecoderCallback = DecoderMediaCallback(videoDecoder, source, videoData, startUs, endUs, videoEncoderCallback)
+        val videoDecoderCallback = DecoderMediaCallback(
+            videoDecoder, source, videoData, startUs, endUs, videoEncoderCallback
+        )
         val videoDecoderHandler = Handler(videoDecoderThread.looper)
         videoDecoderHandler.postAndWait {
             videoDecoder.configure(videoDecoderCallback, videoDecoderHandler)
@@ -160,7 +162,9 @@ class AsyncVideoConverterImpl @Inject constructor(
             audioEncoderHandler.postAndWait {
                 audioEncoder.configure(audioEncoderCallback, audioEncoderHandler)
             }
-            val audioDecoderCallback = DecoderMediaCallback(audioDecoder!!, source, audioData, startUs, endUs, videoEncoderCallback)
+            val audioDecoderCallback = DecoderMediaCallback(
+                audioDecoder!!, source, audioData, startUs, endUs, videoEncoderCallback
+            )
             val audioDecoderHandler = Handler(audioDecoderThread.looper)
             audioDecoderHandler.postAndWait {
                 audioDecoder.configure(audioDecoderCallback, audioDecoderHandler)

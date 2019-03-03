@@ -15,7 +15,9 @@ import ru.cherryperry.instavideo.R
 import ru.cherryperry.instavideo.core.illegalArgument
 
 class TimeSelectorView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
@@ -100,11 +102,17 @@ class TimeSelectorView @JvmOverloads constructor(
         progressLinePaint.alpha = ALPHA_SELECTED
         canvas.drawLine(leftBorder, lineY, rightBorder, lineY, progressLinePaint)
         canvas.save()
-        canvas.translate(leftBorder - leftThumbDrawable.intrinsicWidth / 2, lineY - rightThumbDrawable.intrinsicHeight / 2)
+        canvas.translate(
+            leftBorder - leftThumbDrawable.intrinsicWidth / 2,
+            lineY - rightThumbDrawable.intrinsicHeight / 2
+        )
         leftThumbDrawable.draw(canvas)
         canvas.restore()
         canvas.save()
-        canvas.translate(rightBorder - rightThumbDrawable.intrinsicWidth / 2, lineY - rightThumbDrawable.intrinsicHeight / 2)
+        canvas.translate(
+            rightBorder - rightThumbDrawable.intrinsicWidth / 2,
+            lineY - rightThumbDrawable.intrinsicHeight / 2
+        )
         rightThumbDrawable.draw(canvas)
         canvas.restore()
     }
@@ -117,10 +125,12 @@ class TimeSelectorView @JvmOverloads constructor(
                 MotionEvent.ACTION_DOWN -> {
                     oldX = event.x
                     oldY = event.y
-                    if (event.x > realRightPointerPosition - halfSlop && event.x < realRightPointerPosition + halfSlop) {
+                    if (event.x > realRightPointerPosition - halfSlop &&
+                        event.x < realRightPointerPosition + halfSlop) {
                         touched = true
                         touchedRight = true
-                    } else if (event.x > realLeftPointerPosition - halfSlop && event.x < realLeftPointerPosition + halfSlop) {
+                    } else if (event.x > realLeftPointerPosition - halfSlop &&
+                        event.x < realLeftPointerPosition + halfSlop) {
                         touched = true
                         touchedRight = false
                     }
@@ -214,7 +224,7 @@ class TimeSelectorView @JvmOverloads constructor(
         leftPointerPosition = MathUtils.clamp(leftPointerPosition, 0f, 1f)
         // it is not possible to swap pointers
         if (leftPointerPosition > rightPointerPosition) {
-            rightPointerPosition = leftPointerPosition;
+            rightPointerPosition = leftPointerPosition
         }
         // it is not possible to move pointer above limit
         if (rightPointerPosition - leftPointerPosition > limit) {

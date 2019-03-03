@@ -14,7 +14,8 @@ class MediaMetadataRepositoryImpl @Inject constructor(
     private val context: Context
 ) : MediaMetadataRepository {
 
-    override fun getMetaData(uri: Uri): Single<VideoFileMetaData> = getMetaData(UriMediaDataRetrieverSource(uri, context))
+    override fun getMetaData(uri: Uri): Single<VideoFileMetaData> =
+        getMetaData(UriMediaDataRetrieverSource(uri, context))
 
     fun getMetaData(mediaMetadataRetrieverSource: MediaMetadataRetrieverSource): Single<VideoFileMetaData> = Single
         .fromCallable {

@@ -34,6 +34,10 @@ class VideoTransformationRawFrameProcessor(
     private val rotation: Int
 ) : RawFrameProcessor, Closeable {
 
+    companion object {
+        private const val CENTER = 0.5f
+    }
+
     private val outputBitmapPaint = Paint()
     private val outputBitmapDst = RectF(sourceRect)
 
@@ -80,7 +84,7 @@ class VideoTransformationRawFrameProcessor(
         outputBitmapAllocation = Allocation.createFromBitmap(renderScript, outputBitmap)
         if (outputBitmapDst.width() != 0f && outputBitmapDst.height() != 0f) {
             val matrix = Matrix()
-            matrix.setRotate(-rotation.toFloat(), 0.5f, 0.5f)
+            matrix.setRotate(-rotation.toFloat(), CENTER, CENTER)
             matrix.mapRect(outputBitmapDst)
             outputBitmapDst.left *= outputBitmapCanvas.width
             outputBitmapDst.right *= outputBitmapCanvas.width
