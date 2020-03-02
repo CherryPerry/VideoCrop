@@ -4,6 +4,8 @@
 [![Version](https://img.shields.io/github/release/CherryPerry/VideoCrop.svg)](https://github.com/CherryPerry/VideoCrop/releases)
 [![License](https://img.shields.io/badge/license-WTFPL-green.svg)](https://github.com/CherryPerry/VideoCrop/blob/master/LICENSE)
 
+**UPDATE:** Actually, used approach is not the best one. Consider using [Surface](https://developer.android.com/reference/android/media/MediaCodec#using-an-output-surface) approach for both decoder and encoder. Doing it this way, you can get predictable result before crop, using sufrace for rendering video in UI, and after crop using surface for encode it. I created this project just to check, if it is possible to use `ByteBuffer`s instead. Also audio [does not work](https://github.com/CherryPerry/VideoCrop/issues/1) for some reason...
+
 You can crop video to make it square and be less than 20 seconds in duration.
 
 It uses [MediaCodec](https://developer.android.com/reference/android/media/MediaCodec) API for decoding and encoding video.
